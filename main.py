@@ -35,7 +35,7 @@ class ConfigManager:
             self.config.write(configfile)
 
 
-class ConfigGui(QtWidgets.QWidget):
+class PyQTConfigCraft(QtWidgets.QWidget):
     def __init__(self, config_manager):
         super().__init__()
 
@@ -45,6 +45,7 @@ class ConfigGui(QtWidgets.QWidget):
 
     def init_ui(self):
         self.setWindowTitle('Configuration Manager')
+        self.resize(800, 600)
 
         layout = QtWidgets.QVBoxLayout()
 
@@ -57,7 +58,7 @@ class ConfigGui(QtWidgets.QWidget):
                 # concatenate all lines in 'Documentation' section
                 doc_html = ''.join([self.config_manager.config.get('Documentation', option) for option in self.config_manager.config.options('Documentation')])
 
-                doc_widget.setHtml(doc_html)  # Use setHtml instead of setText
+                doc_widget.setHtml(doc_html) 
                 self.tab_widget.addTab(doc_widget, section)
 
             else:
@@ -80,7 +81,6 @@ class ConfigGui(QtWidgets.QWidget):
 
     def add_entry(self, layout, key, value):
         try:
-            # Try to interpret the value as JSON. If it fails, treat it as a string.
             typed_value = json.loads(value)
         except json.JSONDecodeError:
             typed_value = value
@@ -148,6 +148,8 @@ class ConfigGui(QtWidgets.QWidget):
                         value = value_widget.value()
                     elif isinstance(value_widget, QtWidgets.QDoubleSpinBox):
                         value = value_widget.value()
+                    elif isinstance(value_widget, QtWidgets.QTimeEdit):
+                        value = value_widget.text()
                     elif isinstance(value_widget, QtWidgets.QLineEdit):
                         value = value_widget.text()
                     else:
@@ -168,7 +170,7 @@ def main():
     config_manager = ConfigManager(config_path)
 
     app = QApplication([])
-    gui = ConfigGui(config_manager)
+    gui = PyQTConfigCraft(config_manager)
     gui.show()
 
     app.exec_()
@@ -182,7 +184,7 @@ if __name__ == "__main__":
     #app = QtWidgets.QApplication(sys.argv)
 
     #config_manager = ConfigManager('pc-power-schedulerww')
-    #config_gui = ConfigGui(config_manager)
+    #config_gui = PyQTConfigCraft(config_manager)
     #config_gui.show()
 
     #sys.exit(app.exec_())
