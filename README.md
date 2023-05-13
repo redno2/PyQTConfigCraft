@@ -68,12 +68,12 @@ cd PyQTConfigCraft
 
 3. Run the script:
 ```bash
-python PyQTConfigCraft.py
+python main.py
 ```
 
 4. Use the -f or --config-file option to specify the path to the INI configuration file.
 ```bash
-python PyQTConfigCraft.py -f /path/to/your/config.ini
+python main.py -f /path/to/your/config.ini
 ```
 Note: PyQTConfigCraft will create a default configuration file if the file does not exist at the specified path.
 
