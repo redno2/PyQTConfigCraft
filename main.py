@@ -44,7 +44,7 @@ class PyQTConfigCraft(QtWidgets.QWidget):
         self.init_ui()
 
     def init_ui(self):
-        self.setWindowTitle('Configuration Manager')
+        self.setWindowTitle('Config craft')
         self.resize(800, 600)
 
         layout = QtWidgets.QVBoxLayout()
@@ -117,7 +117,7 @@ class PyQTConfigCraft(QtWidgets.QWidget):
     def create_password_edit(self):
         password_edit = QLineEdit()
         password_edit.setEchoMode(QLineEdit.Password)
-        toggle_password_visibility_action = QAction(QIcon('eye-not-looking-symbolic.svg'), 'Show Password', password_edit)
+        toggle_password_visibility_action = QAction(QIcon('img/eye-not-looking-symbolic.svg'), 'Show Password', password_edit)
         toggle_password_visibility_action.triggered.connect(lambda: self.toggle_password_visibility(toggle_password_visibility_action, password_edit))
         toggle_password_visibility_action.setCheckable(True)
         password_edit.addAction(toggle_password_visibility_action, QLineEdit.TrailingPosition)
@@ -126,10 +126,10 @@ class PyQTConfigCraft(QtWidgets.QWidget):
     def toggle_password_visibility(self, action, password_edit):
         if action.isChecked():
             password_edit.setEchoMode(QLineEdit.Normal)
-            action.setIcon(QIcon('eye-open-negative-filled-symbolic.svg'))  # Change the icon as needed
+            action.setIcon(QIcon('img/eye-open-negative-filled-symbolic.svg'))  # Change the icon as needed
         else:
             password_edit.setEchoMode(QLineEdit.Password)
-            action.setIcon(QIcon('eye-not-looking-symbolic.svg'))
+            action.setIcon(QIcon('img/eye-not-looking-symbolic.svg'))
     
     def save_config(self):
         for i in range(self.tab_widget.count()):
@@ -175,16 +175,7 @@ def main():
 
     app.exec_()
 
+
 if __name__ == "__main__":
     main()
 
-#if __name__ == '__main__':
-    #import sys
-
-    #app = QtWidgets.QApplication(sys.argv)
-
-    #config_manager = ConfigManager('pc-power-schedulerww')
-    #config_gui = PyQTConfigCraft(config_manager)
-    #config_gui.show()
-
-    #sys.exit(app.exec_())
