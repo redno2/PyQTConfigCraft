@@ -1,11 +1,12 @@
-from PyQt5.QtWidgets import QAction, QLineEdit, QApplication, QFormLayout, QCheckBox, QSpinBox, QDoubleSpinBox, QLabel, QTextBrowser, QTabWidget, QVBoxLayout, QWidget, QPushButton
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QTime
-from PyQt5 import QtWidgets
-
+import argparse
+import json
+import os
 from configparser import ConfigParser
-import os, argparse, json
 
+from PyQt5 import QtWidgets
+from PyQt5.QtCore import QTime
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QAction, QLineEdit, QApplication
 
 
 class ConfigManager:
@@ -19,15 +20,15 @@ class ConfigManager:
         else:
             self.config.read(config_path)
 
-
     def load_config(self):
         if not os.path.exists(self.config_path):
             raise FileNotFoundError(f"File not found: {self.config_path}")
         self.config.read(self.config_path)
-        
+
     def create_config(self):
-        self.config['General'] = {"MyStrKey": "MyStrVar", "MyBoolKey": True, "MyTimeKey": "12:45", "MyPasswordKey": "BolosInTheWild", "MyFloatKey": "42,42", "MyIntKey": "666"}
-        self.config['Documentation'] = {"Doc": "Add your documentation here"}   
+        self.config['General'] = {"MyStrKey": "MyStrVar", "MyBoolKey": True, "MyTimeKey": "12:45",
+                                  "MyPasswordKey": "BolosInTheWild", "MyFloatKey": "42,42", "MyIntKey": "666"}
+        self.config['Documentation'] = {"Doc": "Add your documentation here"}
         self.save_config()
 
     def save_config(self):
@@ -39,6 +40,7 @@ class PyQTConfigCraft(QtWidgets.QWidget):
     def __init__(self, config_manager):
         super().__init__()
 
+        self.tab_widget = None
         self.config_manager = config_manager
 
         self.init_ui()
@@ -56,9 +58,10 @@ class PyQTConfigCraft(QtWidgets.QWidget):
                 doc_widget = QtWidgets.QTextBrowser()
                 doc_widget.setOpenExternalLinks(True)  # Enable opening of external links
                 # concatenate all lines in 'Documentation' section
-                doc_html = ''.join([self.config_manager.config.get('Documentation', option) for option in self.config_manager.config.options('Documentation')])
+                doc_html = ''.join([self.config_manager.config.get('Documentation', option) for option in
+                                    self.config_manager.config.options('Documentation')])
 
-                doc_widget.setHtml(doc_html) 
+                doc_widget.setHtml(doc_html)
                 self.tab_widget.addTab(doc_widget, section)
 
             else:
@@ -68,7 +71,7 @@ class PyQTConfigCraft(QtWidgets.QWidget):
 
                 for key in self.config_manager.config[section]:
                     self.add_entry(section_layout, key, self.config_manager.config.get(section, key))
-                
+
                 self.tab_widget.addTab(section_widget, section)
 
         layout.addWidget(self.tab_widget)
@@ -84,7 +87,6 @@ class PyQTConfigCraft(QtWidgets.QWidget):
             typed_value = json.loads(value)
         except json.JSONDecodeError:
             typed_value = value
-
 
         if isinstance(typed_value, bool):
             widget = QtWidgets.QCheckBox()
@@ -111,26 +113,29 @@ class PyQTConfigCraft(QtWidgets.QWidget):
                 widget.setText(typed_value)
         else:
             widget = QtWidgets.QLabel('Unsupported type')
-        
+
         layout.addRow(key, widget)
 
     def create_password_edit(self):
         password_edit = QLineEdit()
         password_edit.setEchoMode(QLineEdit.Password)
-        toggle_password_visibility_action = QAction(QIcon('img/eye-not-looking-symbolic.svg'), 'Show Password', password_edit)
-        toggle_password_visibility_action.triggered.connect(lambda: self.toggle_password_visibility(toggle_password_visibility_action, password_edit))
+        toggle_password_visibility_action = QAction(QIcon('img/eye-not-looking-symbolic.svg'), 'Show Password',
+                                                    password_edit)
+        toggle_password_visibility_action.triggered.connect(
+            lambda: self.toggle_password_visibility(toggle_password_visibility_action, password_edit))
         toggle_password_visibility_action.setCheckable(True)
         password_edit.addAction(toggle_password_visibility_action, QLineEdit.TrailingPosition)
         return password_edit
 
-    def toggle_password_visibility(self, action, password_edit):
+    @staticmethod
+    def toggle_password_visibility(action, password_edit):
         if action.isChecked():
             password_edit.setEchoMode(QLineEdit.Normal)
             action.setIcon(QIcon('img/eye-open-negative-filled-symbolic.svg'))  # Change the icon as needed
         else:
             password_edit.setEchoMode(QLineEdit.Password)
             action.setIcon(QIcon('img/eye-not-looking-symbolic.svg'))
-    
+
     def save_config(self):
         for i in range(self.tab_widget.count()):
             section = self.tab_widget.tabText(i)
@@ -141,7 +146,7 @@ class PyQTConfigCraft(QtWidgets.QWidget):
                 layout = self.tab_widget.widget(i).layout()
                 for j in range(0, layout.count(), 2):
                     key = layout.itemAt(j).widget().text()
-                    value_widget = layout.itemAt(j+1).widget()
+                    value_widget = layout.itemAt(j + 1).widget()
                     if isinstance(value_widget, QtWidgets.QCheckBox):
                         value = value_widget.isChecked()
                     elif isinstance(value_widget, QtWidgets.QSpinBox):
@@ -158,11 +163,13 @@ class PyQTConfigCraft(QtWidgets.QWidget):
         self.config_manager.save_config()
 
 
-
 def main():
-    parser = argparse.ArgumentParser(description='Configuration file manager. Python and PyQt5-based configuration file manager, allowing user-friendly editing and saving of key-value pair files with diverse data types and embedded documentation support for INI files.')
+    parser = argparse.ArgumentParser(
+        description='Configuration file manager. Python and PyQt5-based configuration file manager, allowing '
+                    'user-friendly editing and saving of key-value pair files with diverse data types and embedded '
+                    'documentation support for INI files.')
     parser.add_argument('-f', '--config-file', help='Path to the INI configuration file.')
-    parser.add_argument('-i', '--icon', help='Path to the icon file.') #TODO
+    parser.add_argument('-i', '--icon', help='Path to the icon file.')  # TODO
 
     args = parser.parse_args()
 
@@ -178,4 +185,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
