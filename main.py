@@ -36,17 +36,19 @@ class ConfigManager:
 
 
 class PyQTConfigCraft(QtWidgets.QWidget):
-    def __init__(self, config_manager):
+    def __init__(self, config_manager, title):
         super().__init__()
 
         self.tab_widget = None
         self.config_manager = config_manager
+        self.title = title
 
         self.init_ui()
 
     def init_ui(self):
-        self.setWindowTitle('Config craft')
+        self.setWindowTitle(self.title)
         self.resize(800, 600)
+
 
         layout = QtWidgets.QVBoxLayout()
 
@@ -130,7 +132,7 @@ class PyQTConfigCraft(QtWidgets.QWidget):
     def toggle_password_visibility(action, password_edit):
         if action.isChecked():
             password_edit.setEchoMode(QLineEdit.Normal)
-            action.setIcon(QIcon('img/eye-open-negative-filled-symbolic.svg'))  # Change the icon as needed
+            action.setIcon(QIcon('img/eye-open-negative-filled-symbolic.svg'))
         else:
             password_edit.setEchoMode(QLineEdit.Password)
             action.setIcon(QIcon('img/eye-not-looking-symbolic.svg'))
@@ -168,7 +170,7 @@ def main():
                     'user-friendly editing and saving of key-value pair files with diverse data types and embedded '
                     'documentation support for INI files.')
     parser.add_argument('-f', '--config-file', help='Path to the INI configuration file.')
-    parser.add_argument('-i', '--icon', help='Path to the icon file.')  # TODO
+    parser.add_argument('-t', '--title', help='Title of the application', default='Config Craft')
 
     args = parser.parse_args()
 
@@ -176,7 +178,11 @@ def main():
     config_manager = ConfigManager(config_path)
 
     app = QApplication([])
-    gui = PyQTConfigCraft(config_manager)
+
+    app_icon = QIcon('img/icon.png')
+    app.setWindowIcon(app_icon)
+
+    gui = PyQTConfigCraft(config_manager, args.title)
     gui.show()
 
     app.exec_()
