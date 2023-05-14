@@ -8,7 +8,6 @@ from PyQt5.QtCore import QTime
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction, QLineEdit, QApplication
 
-
 class ConfigManager:
     def __init__(self, config_path):
         self.config_path = config_path
