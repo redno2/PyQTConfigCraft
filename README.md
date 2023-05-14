@@ -13,7 +13,8 @@ PyQTConfigCraft is a Configuration File Manager developed with Python and PyQt5.
 
 Whether you are managing configuration files or seeking a more efficient way to handle key-value pairs, PyQTConfigCraft is the tool for you.
 
-
+## Example
+Based on [default.ini](default.ini).
 <div style="display: flex;">
     <img src="img/ConfigCraft.png" alt="Config craft main" style="width:400px;margin-right:10px;">
     <img src="img/ConfigCraft2.png" alt="Config craft doc" style="width:400px;">
